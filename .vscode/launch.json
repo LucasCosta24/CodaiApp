@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach Java Debugger (JDWP)",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 8700,
+      "preLaunchTask": "Run App (install + launch)",
+      "console": "internalConsole",
+      "projectName": "app"
+    }
+  ]
+}

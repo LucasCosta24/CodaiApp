@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Gradle: Clean",
+      "type": "shell",
+      "command": "./gradlew clean",
+      "group": "build",
+      "presentation": {"reveal": "always"}
+    },
+    {
+      "label": "Gradle: Assemble Debug",
+      "type": "shell",
+      "command": "./gradlew assembleDebug",
+      "group": "build",
+      "presentation": {"reveal": "always"}
+    },
+    {
+      "label": "Install Debug (device/emulator)",
+      "type": "shell",
+      "command": "./gradlew installDebug",
+      "group": "none",
+      "presentation": {"reveal": "always"}
+    },
+    {
+      "label": "Start Emulator",
+      "type": "shell",
+      "command": "bash -lc \"if [ -z \"$AVD_NAME\" ]; then echo 'AVD_NAME not set. Will attempt to start an auto-created AVD: Pixel_7_API_33'; export AVD_NAME=Pixel_7_API_33; fi; ./scripts/setup-emulator.sh\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "Create Emulator (auto)",
+      "type": "shell",
+      "command": "bash -lc './scripts/setup-emulator.sh'",
+      "presentation": {"reveal": "always"}
+    },
+    {
+      "label": "Run App (install + launch)",
+      "type": "shell",
+      "command": "bash -lc './scripts/run-android.sh'",
+      "presentation": {"reveal": "always"}
+    }
+  ]
+}
