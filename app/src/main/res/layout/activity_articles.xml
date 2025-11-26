@@ -12,6 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+<!--        <com.google.android.material.appbar.MaterialToolbar-->
+<!--            android:id="@+id/articlesToolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="56dp"-->
+<!--            android:background="#020824"-->
+<!--            app:title="Artigos Codai"-->
+<!--            app:titleTextColor="@android:color/white"-->
+<!--            app:navigationIcon="@android:drawable/ic_media_previous" />-->
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:text="#Python"
                         android:checkable="true" />
-                        
+
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipUiUxArticles"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
