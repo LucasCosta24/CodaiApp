@@ -1,87 +1,109 @@
 package com.example.codaiapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.codaiapp.dao.UserDAO;
+import com.example.codaiapp.model.User;
+import com.example.codaiapp.utils.SessionManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final String PREFS_USER = "prefs_user";
-    private static final String KEY_NAME   = "name";
-    private static final String KEY_EMAIL  = "email";
-    private static final String KEY_ROLE   = "role";
-    private static final String KEY_ABOUT  = "about";
+    private SessionManager sessionManager;
+    private UserDAO userDAO;
 
-    private TextView tvName;
-    private TextView tvEmail;
-    private TextView tvRole;
-    private TextView tvAbout;
+    private TextView tvUserName, tvUserEmail, tvUserRole, tvUserBio;
+    private TextView tvArticlesCount, tvPostsCount, tvCommentsCount;
+    private MaterialButton btnEditProfile, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        sessionManager = new SessionManager(this);
+        userDAO = new UserDAO(this);
+
+        if (!sessionManager.isLoggedIn()) {
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         MaterialToolbar toolbar = findViewById(R.id.profileToolbar);
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(v -> finish());
         }
 
+        // IDs corrigidos de acordo com activity_profile.xml
+        tvUserName = findViewById(R.id.tvProfileName);
+        tvUserEmail = findViewById(R.id.tvProfileEmail);
+        tvUserRole = findViewById(R.id.tvProfileRole);
+        tvUserBio = findViewById(R.id.tvProfileAbout);
 
-        tvName  = findViewById(R.id.tvProfileName);
-        tvEmail = findViewById(R.id.tvProfileEmail);
-        tvRole  = findViewById(R.id.tvProfileRole);
-        tvAbout = findViewById(R.id.tvProfileAbout);
+        // IDs de contagem corrigidos
+        tvArticlesCount = findViewById(R.id.tvProfileArticlesCount);
+        tvPostsCount = findViewById(R.id.tvProfileForumPostsCount);
+        tvCommentsCount = findViewById(R.id.tvProfileBadgesCount); // Mapeado para Comentários/Badges
 
-        MaterialButton btnEdit = findViewById(R.id.btnEditProfile);
-        MaterialButton btnLogout = findViewById(R.id.btnLogout);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnLogout = findViewById(R.id.btnLogout);
 
-        // Carrega dados salvos
-        loadProfile();
+        loadProfileData();
 
-        btnEdit.setOnClickListener(v -> {
+        btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
             startActivity(intent);
         });
 
-        // Logout simples (por enquanto só limpa prefs)
-        btnLogout.setOnClickListener(v -> {
-            SharedPreferences prefs = getSharedPreferences(PREFS_USER, MODE_PRIVATE);
-            prefs.edit().clear().apply();
+        btnLogout.setOnClickListener(v -> handleLogout());
+    }
 
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        });
+    private void loadProfileData() {
+        String loggedInEmail = sessionManager.getUserEmail();
+
+        if (loggedInEmail != null) {
+            User user = userDAO.getUserDetails(loggedInEmail);
+
+            if (user != null) {
+                tvUserName.setText(user.getNome());
+                tvUserEmail.setText(user.getEmail());
+
+                if (user.getBio() != null && !user.getBio().isEmpty()) {
+                    tvUserBio.setText(user.getBio());
+                } else {
+                    tvUserBio.setText("Adicione uma breve descrição sobre você, seus objetivos de aprendizado e áreas de interesse.");
+                }
+
+                tvArticlesCount.setText(String.valueOf(user.getArticlesReadCount()));
+                tvPostsCount.setText(String.valueOf(user.getForumPostsCount()));
+                tvCommentsCount.setText(String.valueOf(user.getCommentsCount()));
+
+                tvUserRole.setText("Estudante / Dev em formação");
+            }
+        }
+    }
+
+    private void handleLogout() {
+        sessionManager.logoutUser();
+
+        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Quando voltar do EditProfileActivity, recarrega os dados
-        loadProfile();
-    }
-
-    private void loadProfile() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_USER, MODE_PRIVATE);
-        String name  = prefs.getString(KEY_NAME, "Nome do Usuário");
-        String email = prefs.getString(KEY_EMAIL, "usuario@email.com");
-        String role  = prefs.getString(KEY_ROLE, "Estudante / Dev em formação");
-        String about = prefs.getString(KEY_ABOUT,
-                "Adicione uma breve descrição sobre você, seus objetivos de aprendizado e áreas de interesse.");
-
-        tvName.setText(name);
-        tvEmail.setText(email);
-        tvRole.setText(role);
-        tvAbout.setText(about);
+        if (sessionManager.isLoggedIn()) {
+            loadProfileData();
+        }
     }
 }
-
-

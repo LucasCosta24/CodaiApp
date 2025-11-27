@@ -17,4 +17,8 @@
         android:id="@+id/nav_forum"
         android:title="Fórum" />
 
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Sair / Logout" />
+
 </menu>

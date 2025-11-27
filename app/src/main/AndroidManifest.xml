@@ -20,9 +20,9 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".EditProfileActivity" />
 
+        <activity android:name=".RegisterActivity" />
 
 
-        <!-- Tela HOME (AGORA é a tela inicial) -->
         <activity
             android:name=".HomeActivity"
             android:exported="true">
