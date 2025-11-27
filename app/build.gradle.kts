@@ -41,5 +41,4 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("org.mindrot:jbcrypt:0.4")
-    implementation("com.google.android.material:material:1.9.0")
 }

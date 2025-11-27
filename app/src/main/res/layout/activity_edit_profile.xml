@@ -14,7 +14,7 @@
         android:background="#020824"
         app:title="Editar perfil"
         app:titleTextColor="@android:color/white"
-        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel" />
+        app:navigationIcon="@drawable/ic_arrow_back" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

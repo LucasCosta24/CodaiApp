@@ -2,6 +2,7 @@ package com.example.codaiapp;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class ArticlesActivity extends AppCompatActivity {
     private RecyclerView rvArticles;
     private List<Article> articleList;
     private LinearLayout emptyStateLayout;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,14 @@ public class ArticlesActivity extends AppCompatActivity {
 
         rvArticles = findViewById(R.id.rvArticles);
         emptyStateLayout = findViewById(R.id.emptyStateArticlesLayout);
+        backButton = findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         setupRecyclerView();
         loadArticles();

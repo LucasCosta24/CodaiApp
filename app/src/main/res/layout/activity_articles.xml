@@ -28,6 +28,15 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@android:color/white" />
+
             <!-- Header -->
             <TextView
                 android:id="@+id/tvBlogTitle"

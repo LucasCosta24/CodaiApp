@@ -9,15 +9,14 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDAO {
 
-    private SQLiteDatabase db;
-    private DatabaseHelper dbHelper;
+    private final DatabaseHelper dbHelper;
 
     public UserDAO(Context context) {
         dbHelper = new DatabaseHelper(context);
     }
 
     public boolean registerUser(User user) {
-        db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(DatabaseHelper.COLUMN_NOME, user.getNome());
@@ -38,7 +37,7 @@ public class UserDAO {
     }
 
     public User login(String email, String passwordTextPlano) {
-        db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         User userEncontrado = null;
 
         Cursor cursor = db.query(
@@ -57,12 +56,14 @@ public class UserDAO {
                 userEncontrado.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID)));
                 userEncontrado.setNome(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOME)));
                 userEncontrado.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EMAIL)));
+                userEncontrado.setBio(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_BIO)));
+                userEncontrado.setArticlesReadCount(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ARTICLES_READ_COUNT)));
+                userEncontrado.setForumPostsCount(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FORUM_POSTS_COUNT)));
+                userEncontrado.setCommentsCount(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COMMENTS_COUNT)));
             }
         }
 
-        if (cursor != null) {
-            cursor.close();
-        }
+        cursor.close();
         db.close();
 
         return userEncontrado;
@@ -72,15 +73,12 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        // Campos que podem ser atualizados pelo usuário na tela de edição
         values.put(DatabaseHelper.COLUMN_NOME, user.getNome());
         values.put(DatabaseHelper.COLUMN_BIO, user.getBio());
 
-        // Usamos o email como critério (WHERE clause)
         String whereClause = DatabaseHelper.COLUMN_EMAIL + " = ?";
         String[] whereArgs = {user.getEmail()};
 
-        // O metodo update retorna o número de linhas afetadas
         int rowsAffected = db.update(
                 DatabaseHelper.TABLE_USERS,
                 values,
@@ -93,7 +91,7 @@ public class UserDAO {
     }
 
     public User getUserDetails(String email) {
-        db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         User user = null;
 
         String[] columns = {
@@ -130,9 +128,7 @@ public class UserDAO {
             user.setCommentsCount(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COMMENTS_COUNT)));
         }
 
-        if (cursor != null) {
-            cursor.close();
-        }
+        cursor.close();
         db.close();
         return user;
     }
