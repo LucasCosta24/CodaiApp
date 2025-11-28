@@ -15,7 +15,7 @@
         <activity android:name=".RecoveryPasswordActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".HomeActivity"  android:exported="false" />
         <activity android:name=".ArticlesActivity" />
         <activity android:name=".ForumActivity" />
         <activity android:name=".ProfileActivity" />
@@ -25,8 +25,9 @@
 
 
         <activity
-            android:name=".HomeActivity"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
